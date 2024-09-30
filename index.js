@@ -20,24 +20,24 @@ export default function HomePage() {
       const account = await ethWallet.request({ method: "eth_accounts" });
       handleAccount(account);
     }
-  }
+  };
 
   const handleAccount = (account) => {
-    if (account) {
+    if (account.length > 0) {
       console.log("Account connected: ", account);
-      setAccount(account);
+      setAccount(account[0]);
     } else {
       console.log("No account found");
     }
-  }
+  };
 
   const connectAccount = async () => {
     if (!ethWallet) {
-      alert('MetaMask wallet is required to connect');
+      alert("MetaMask wallet is required to connect");
       return;
     }
 
-    const accounts = await ethWallet.request({ method: 'eth_requestAccounts' });
+    const accounts = await ethWallet.request({ method: "eth_requestAccounts" });
     handleAccount(accounts);
 
     // once wallet is set we can get a reference to our deployed contract
@@ -50,13 +50,13 @@ export default function HomePage() {
     const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
 
     setATM(atmContract);
-  }
+  };
 
   const getBalance = async () => {
     if (atm) {
       setBalance((await atm.getBalance()).toNumber());
     }
-  }
+  };
 
   const deposit = async () => {
     if (atm) {
@@ -64,7 +64,7 @@ export default function HomePage() {
       await tx.wait();
       getBalance();
     }
-  }
+  };
 
   const withdraw = async () => {
     if (atm) {
@@ -72,7 +72,34 @@ export default function HomePage() {
       await tx.wait();
       getBalance();
     }
-  }
+  };
+
+  // Function to buy a hoodie
+  const buyHoodie = async () => {
+    if (atm) {
+      let tx = await atm.buyHoodie();
+      await tx.wait();
+      getBalance();
+    }
+  };
+
+  // Function to buy a t-shirt
+  const buyTShirt = async () => {
+    if (atm) {
+      let tx = await atm.buyTShirt();
+      await tx.wait();
+      getBalance();
+    }
+  };
+
+  // Function to buy pants
+  const buyPants = async () => {
+    if (atm) {
+      let tx = await atm.buyPants();
+      await tx.wait();
+      getBalance();
+    }
+  };
 
   const initUser = () => {
     // Check to see if user has Metamask
@@ -92,14 +119,24 @@ export default function HomePage() {
     return (
       <div>
         <p>Your Account: {account}</p>
-        <p>Your Balance: {balance}</p>
-        <button onClick={deposit}>Deposit 45 ETH</button>
-        <button onClick={withdraw}>Withdraw 30 ETH</button>
+        <p>Your Balance: {balance} ETH</p>
+        <div className="button-group">
+          <button onClick={deposit}>Deposit 45 ETH</button>
+          <button onClick={withdraw}>Withdraw 30 ETH</button>
+        </div>
+        <h3>Buy Items</h3>
+        <div className="button-group">
+          <button onClick={buyHoodie}>Buy Hoodie (500 ETH)</button>
+          <button onClick={buyTShirt}>Buy T-Shirt (300 ETH)</button>
+          <button onClick={buyPants}>Buy Pants (400 ETH)</button>
+        </div>
       </div>
     );
-  }
+  };
 
-  useEffect(() => { getWallet(); }, []);
+  useEffect(() => {
+    getWallet();
+  }, []);
 
   return (
     <main className="container">
@@ -115,9 +152,26 @@ export default function HomePage() {
           justify-content: center;
           align-items: center;
         }
+        .button-group {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+        }
+        button {
+          padding: 10px 20px;
+          background-color: #3498DB;
+          border: none;
+          color: white;
+          cursor: pointer;
+          font-size: 16px;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+        }
+        button:hover {
+          background-color: #2980B9;
+        }
       `}
       </style>
     </main>
   );
 }
-
