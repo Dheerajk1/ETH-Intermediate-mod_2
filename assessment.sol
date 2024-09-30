@@ -9,6 +9,9 @@ contract Assessment {
 
     event Deposit(uint256 amount);
     event Withdraw(uint256 amount);
+    event BuyHoodie(uint256 amount);
+    event BuyTShirt(uint256 amount);
+    event BuyPants(uint256 amount);
 
     constructor(uint initBalance) payable {
         owner = payable(msg.sender);
@@ -56,5 +59,47 @@ contract Assessment {
 
         // emit the event
         emit Withdraw(_withdrawAmount);
+    }
+
+    // Function to buy a hoodie
+    function buyHoodie() public {
+        uint256 hoodiePrice = 500; // Cost of a hoodie
+        require(msg.sender == owner, "You are not the owner of this account");
+        if (balance < hoodiePrice) {
+            revert InsufficientBalance({
+                balance: balance,
+                withdrawAmount: hoodiePrice
+            });
+        }
+        balance -= hoodiePrice;
+        emit BuyHoodie(hoodiePrice);
+    }
+
+    // Function to buy a t-shirt
+    function buyTShirt() public {
+        uint256 tshirtPrice = 300; // Cost of a t-shirt
+        require(msg.sender == owner, "You are not the owner of this account");
+        if (balance < tshirtPrice) {
+            revert InsufficientBalance({
+                balance: balance,
+                withdrawAmount: tshirtPrice
+            });
+        }
+        balance -= tshirtPrice;
+        emit BuyTShirt(tshirtPrice);
+    }
+
+    // Function to buy pants
+    function buyPants() public {
+        uint256 pantsPrice = 400; // Cost of pants
+        require(msg.sender == owner, "You are not the owner of this account");
+        if (balance < pantsPrice) {
+            revert InsufficientBalance({
+                balance: balance,
+                withdrawAmount: pantsPrice
+            });
+        }
+        balance -= pantsPrice;
+        emit BuyPants(pantsPrice);
     }
 }
